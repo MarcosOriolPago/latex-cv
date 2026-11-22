@@ -1,7 +1,3 @@
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.gz
-*.xmpi
+# Typst build artefacts are committed on purpose (cv.pdf, preview.png)
+*.tmp
+.DS_Store

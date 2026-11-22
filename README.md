@@ -1,61 +1,52 @@
-# LaTeX CV
+# Typst CV
 
-A LaTeX template for creating professional, clean, and modern CVs. The template produces high-quality PDF output suitable for job applications, academic purposes, or professional portfolios.
+A minimal, single-column CV in [Typst](https://typst.app) — classic serif typography,
+no photo, no banner, built around projects and experience. A4, flows onto a second
+page cleanly when needed (entries never split across pages, section titles never
+end up orphaned at the bottom).
 
----
+![CV preview](preview.png)
 
-## Preview
-
-Below is an example of the generated CV PDF:
-
-![CV Preview](preview.png)  
----
-
-## Features
-
-- Minimal and modern design.
-- Fully customizable sections.
-- Easy to update personal information.
-- High-quality PDF output.
-
----
-
-## Requirements
-
-- LaTeX distribution (TeX Live, MiKTeX, MacTeX, etc.)
-- `pdflatex` or any LaTeX editor (TeXShop, TeXstudio, Overleaf, etc.)
-
----
-
-## Quick Start
-
-1. Clone the repository:
+## Build
 
 ```bash
-git clone https://github.com/MarcosOriolPago/latex-cv.git
-cd latex-cv
+# install Typst once: cargo install --locked typst-cli   (or: snap install typst, brew install typst)
+make          # → cv.pdf + preview.png
+make watch    # rebuild on every save
 ```
 
-2. Compile the LaTeX file:
-```bash
-pdflatex cv.tex
+## Layout
+
+```
+cv.typ              ← personal info + which sections appear, in which order
+lib/cv.typ          ← all styling and components (template)
+sections/*.typ      ← the content, one file per section
+fonts/              ← optional extra fonts (e.g. EB Garamond)
 ```
 
-## Customization
+## Components
 
-- Update personal information directly in cv.tex.
+```typst
+= Projects                                   // section title
 
-- Modify, add, or remove sections as needed.
+#project("Name", url: "github.com/u/repo",
+  tagline: "One-line description",
+  stack: ("Python", "PyTorch"))[
+  Free text or a bullet list.
+]
 
-- Replace photo.png with your own photo (optional).
+#entry(org: "Company", location: "City",
+  title: "Role", date: "2024 – Present")[
+  - Achievement
+]
 
+#skills(("Label", "values"), ("Other", "values"))
+#summary[Short profile paragraph.]
+```
 
-## Directory Structure
-latex-cv/<br>
-├── icons <br>
-├── sections<br>
-├── svg-inkscape<br>
-├── cv.tex<br>
-├── profile.jpg<br>
-├── cv.pdf<br>
-└── README.md 
+Template options (in `cv.typ`): `name`, `tagline`, `contacts`, `show-name`, `font`,
+`font-size`, `accent`, `margin`, `lang`.
+
+## License
+
+MIT
