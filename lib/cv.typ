@@ -51,7 +51,7 @@
   font: "Libertinus Serif",
   font-size: 10pt,
   accent: rgb("#1f2a44"),
-  margin: (x: 2.1cm, top: 1.6cm, bottom: 1.6cm),
+  margin: (x: 1.8cm, top: 1.2cm, bottom: 1.5cm),
   lang: "en",
   body,
 ) = {
@@ -113,43 +113,46 @@
   body
 }))
 
-// Experience / education item (optional `stack` like in `project`).
-//   #entry(org: "ACME", location: "Barcelona", title: "Engineer", date: "2024 – now")[ - bullets ]
-#let entry(org: none, title: none, location: none, date: none, stack: (), body) = block(
-  breakable: false, width: 100%, above: 0.95em, below: 0.4em,
+// Dates: dark, lining figures, so they are easy to scan down the right edge.
+#let _date(d) = text(number-type: "lining", tracking: 0.02em, d)
+#let _date-sample = "Sep 0000 – Sep 0000" // widest expected date, sets the date column
+#let _quiet(x) = text(size: 0.95em, fill: _muted, x)
+
+// Shared layout for entries and projects:
+//   Heading (bold)                                    Date
+//   Subtitle (italic)                          Location / link
+//   body
+#let _item(head, date, sub, right, body, stack) = block(
+  breakable: false, width: 100%, above: 1.05em, below: 0.4em,
   {
     set par(justify: false, spacing: 0.45em)
-    if org != none or location != none { _row(_opt(strong, org), location) }
-    if title != none or date != none { _row(_opt(emph, title), _opt(text.with(fill: _muted), date)) }
+    _row(_opt(strong, head), _opt(_date, date))
+    if sub != none or right != none { _row(_opt(emph, sub), _opt(_quiet, right)) }
     if body != [] {
-      v(0.15em)
-      body
+      v(0.2em)
+      // Keep bullets clear of the date column so dates stand alone on the right.
+      context pad(right: measure(_date(_date-sample)).width + 0.8em, body)
     }
     _stack(stack)
   },
 )
 
-// Project item — the visual centre of this CV.
+// Experience / education item (optional `stack` like in `project`).
+//   #entry(org: "ACME", location: "Barcelona", title: "Engineer", date: "2024 – now")[ - bullets ]
+#let entry(org: none, title: none, location: none, date: none, stack: (), body) = _item(
+  org, date, title, location, body, stack,
+)
+
+// Project item.
 //   name     project name (bold)
-//   url      optional link; printed without "https://", flush right
+//   url      optional link; printed without "https://", flush right on line 2
 //   tagline  one-line italic description
 //   stack    array of technologies, printed as a quiet small-caps line
-//   date     optional, shown under the link
-#let project(name, url: none, tagline: none, stack: (), date: none, body) = block(
-  breakable: false, width: 100%, above: 1em, below: 0.4em,
-  {
-    set par(justify: false, spacing: 0.45em)
-    _row(
-      strong(name),
-      if url != none { text(size: 0.9em, link(_full-url(url), _pretty-url(url))) },
-    )
-    if tagline != none or date != none { _row(_opt(emph, tagline), _opt(text.with(fill: _muted), date)) }
-    if body != [] {
-      v(0.15em)
-      body
-    }
-    _stack(stack)
-  },
+//   date     optional, flush right on line 1
+#let project(name, url: none, tagline: none, stack: (), date: none, body) = _item(
+  name, date, tagline,
+  if url != none { link(_full-url(url), _pretty-url(url)) },
+  body, stack,
 )
 
 // Label → values table, e.g. for skills or languages.
