@@ -18,6 +18,8 @@
   ),
   // show-name: false,          // no header at all
   accent: rgb("#7a1f2b"),    // e.g. a deep crimson instead of navy
+  margin: (x: 1.6cm, top: 1.0cm, bottom: 1.0cm), // tighter than the default to keep it on one page
+  font-size: 9.6pt,
 )
 
 // Reorder, add or comment out sections here.

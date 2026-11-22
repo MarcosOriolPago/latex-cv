@@ -7,7 +7,9 @@
   location: "Barcelona, Spain",
   title: "M.Sc. Neuroengineering",
   date: "Sep 2025 – Jan 2027",
-)[]
+)[
+  Master's thesis at the Institute of Neuroinformatics, ETH Zürich & UZH.
+]
 
 #entry(
   org: "Universitat Internacional de Catalunya (UIC)",
