@@ -9,6 +9,9 @@
 //    = Heading       level-1 headings are rendered as section titles
 //    entry(..)       experience / education item
 //    project(..)     project item (title, link, tagline, stack, body)
+//
+//  Both `entry` and `project` accept `page: "slug"`: the heading then links to
+//  <site>/<slug> on the portfolio and gets a small ↗ marker.
 //    skills(..)      label → values table
 //    summary(..)     short centred profile paragraph
 // =============================================================================
@@ -22,6 +25,14 @@
 
 // Accept "github.com/x" or "https://github.com/x"
 #let _full-url(url) = if url.starts-with("http") or url.starts-with("mailto:") or url.starts-with("tel:") { url } else { "https://" + url }
+
+// Portfolio base URL used by `page:` links.
+#let site = "https://marcos.oriol-tech.com/"
+
+// Heading text, linked to its portfolio page when `page` is set.
+#let _paged(head, page) = if page == none or head == none { head } else {
+  link(site + page, head + h(0.25em) + text(size: 0.8em, fill: _muted, baseline: -0.1em, sym.arrow.tr))
+}
 
 // Apply `f` only when `x` is set.
 #let _opt(f, x) = if x != none { f(x) }
@@ -139,8 +150,8 @@
 
 // Experience / education item (optional `stack` like in `project`).
 //   #entry(org: "ACME", location: "Barcelona", title: "Engineer", date: "2024 – now")[ - bullets ]
-#let entry(org: none, title: none, location: none, date: none, stack: (), body) = _item(
-  org, date, title, location, body, stack,
+#let entry(org: none, title: none, location: none, date: none, stack: (), page: none, body) = _item(
+  _paged(org, page), date, title, location, body, stack,
 )
 
 // Project item.
@@ -149,8 +160,9 @@
 //   tagline  one-line italic description
 //   stack    array of technologies, printed as a quiet small-caps line
 //   date     optional, flush right on line 1
-#let project(name, url: none, tagline: none, stack: (), date: none, body) = _item(
-  name, date, tagline,
+//   page     optional portfolio slug; links the name to <site>/<page>
+#let project(name, url: none, tagline: none, stack: (), date: none, page: none, body) = _item(
+  _paged(name, page), date, tagline,
   if url != none { link(_full-url(url), _pretty-url(url)) },
   body, stack,
 )
